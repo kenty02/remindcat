@@ -11,7 +11,7 @@ jobs:
       shell: bash
       run: |
         cd ~/remindcat
-        git pull
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_remindcat_deploy" git pull
         source venv/bin/activate
         pip install -r requirements.txt
         sudo systemctl restart remindcat
