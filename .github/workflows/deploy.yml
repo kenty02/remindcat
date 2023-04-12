@@ -1,0 +1,17 @@
+on:
+  push:
+    branches:
+    - main
+name: Deploy
+jobs:
+  deploy:
+    runs-on: [remindcat-deploy-target]
+    steps:
+    - name: Pull & Restart
+      shell: bash
+      run: |
+        cd ~/remindcat
+        git pull
+        source venv/bin/activate
+        pip install -r requirements.txt
+        sudo systemctl restart remindcat

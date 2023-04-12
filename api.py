@@ -1,10 +1,8 @@
-import base64
-import hashlib
-import hmac
 import os
 from datetime import timedelta, datetime
 
-from fastapi import FastAPI, Header, Body, HTTPException, Request
+from dotenv import load_dotenv
+from fastapi import FastAPI, Header, HTTPException, Request
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -14,7 +12,7 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
-from dotenv import load_dotenv
+
 from db import db
 from lc import get_agent_executor
 
