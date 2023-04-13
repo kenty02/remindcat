@@ -88,8 +88,10 @@ class CustomOutputParser(AgentOutputParser):
 output_parser = CustomOutputParser()
 llm = ChatOpenAI(temperature=0)
 
-
 # LLM chain consisting of the LLM and a prompt
+
+NULL_USER = "NULL_USER"
+
 
 def get_agent_executor(to: str) -> AgentExecutor:
     @tool("Set a reminder")
@@ -101,7 +103,8 @@ def get_agent_executor(to: str) -> AgentExecutor:
         """
         time_str, reminder_text = text.split(",")
         time = datetime.strptime(time_str, "%Y-%m-%d %H:%M")
-        db['reminders'].insert(dict(text=reminder_text, time=time, to=to))
+        if to != NULL_USER:
+            db['reminders'].insert(dict(text=reminder_text, time=time, to=to))
 
         print(f"Reminder set for {time} with name {reminder_text}")
         return f"Reminder set for {time} with name {reminder_text}"
@@ -133,5 +136,7 @@ def get_agent_executor(to: str) -> AgentExecutor:
     agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True)
     return agent_executor
 
-# example
-# agent_executor.run("明日の朝パンを食べる")
+
+if __name__ == "__main__":
+    agent_executor = get_agent_executor(NULL_USER)
+    print(agent_executor.run("なにができますか？"))

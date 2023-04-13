@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -19,6 +20,19 @@ from lc import get_agent_executor
 load_dotenv()  # take envi
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",  # todo: dev only.
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_origins_regex=r"^https://(.*)-kenty02.vercel.app$",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
@@ -60,7 +74,7 @@ def handle_message(event):
         return
     if event.message.text == 'dbg':
         reminders = db['reminders']
-        reminders.insert(dict(to=event.source.user_id, text='test', time=datetime.now()+timedelta(seconds=10)))
+        reminders.insert(dict(to=event.source.user_id, text='test', time=datetime.now() + timedelta(seconds=10)))
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text='testリマインダーを設定しました'))
