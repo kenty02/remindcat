@@ -23,6 +23,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",  # todo: dev only.
+    "https://remindcat-webui.vercel.app"
 ]
 
 app.add_middleware(
