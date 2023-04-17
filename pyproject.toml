@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "remindcat-backend"
+version = "0.1.0"
+description = ""
+authors = ["kenty02 <42216299+kenty02@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{ include = "remindcat_backend" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.1"
+subsystems = "^0.1.0"
+langchain = "^0.0.141"
+sqlmodel = "^0.0.8"
+line-bot-sdk = "^2.4.2"
+python-dotenv = "^1.0.0"
+python-jose = { extras = ["cryptography"], version = "^3.3.0" }
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

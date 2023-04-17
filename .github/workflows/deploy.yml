@@ -1,17 +1,16 @@
 on:
   push:
     branches:
-    - main
+      - main
 name: Deploy
 jobs:
   deploy:
-    runs-on: [remindcat-deploy-target]
+    runs-on: [ remindcat-deploy-target ]
     steps:
-    - name: Pull & Restart
-      shell: bash
-      run: |
-        cd ~/remindcat
-        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_remindcat_deploy" git pull
-        source venv/bin/activate
-        pip install -r requirements.txt
-        sudo systemctl restart remindcat
+      - name: Pull & Restart
+        shell: bash
+        run: |
+          cd ~/remindcat
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_remindcat_deploy" git pull
+          poetry install
+          sudo systemctl restart remindcat
