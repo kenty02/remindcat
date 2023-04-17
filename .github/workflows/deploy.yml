@@ -12,5 +12,5 @@ jobs:
         run: |
           cd ~/remindcat
           GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_remindcat_deploy" git pull
-          poetry install
+          poetry install --no-root
           sudo systemctl restart remindcat
