@@ -8,8 +8,9 @@ from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent, AgentOut
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import BaseChatPromptTemplate
 from langchain.schema import AgentAction, AgentFinish, HumanMessage, BaseMessage
+from sqlmodel import Session
 
-from db import db
+from db import engine
 
 load_dotenv()  # take environment variables from .env.
 
@@ -104,7 +105,9 @@ def get_agent_executor(to: str) -> AgentExecutor:
         time_str, reminder_text = text.split(",")
         time = datetime.strptime(time_str, "%Y-%m-%d %H:%M")
         if to != NULL_USER:
-            db['reminders'].insert(dict(text=reminder_text, time=time, to=to))
+            with Session(engine) as session:
+                session.add(db.Reminder(name=reminder_text, time=time, line_to=to))
+                session.commit()
 
         print(f"Reminder set for {time} with name {reminder_text}")
         return f"Reminder set for {time} with name {reminder_text}"
