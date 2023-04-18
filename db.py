@@ -1,8 +1,9 @@
-import os
 from datetime import datetime
 from typing import Optional
 
 from sqlmodel import Field, Session, SQLModel, create_engine
+
+from config import database_url
 
 
 class HeroBase(SQLModel):
@@ -54,7 +55,6 @@ class ReminderUpdate(SQLModel):
     time: Optional[datetime] = None
 
 
-database_url = os.getenv("DATABASE_URL")
 connect_args = {}
 if database_url.startswith("sqlite"):
     # allow multiple connections to sqlite
