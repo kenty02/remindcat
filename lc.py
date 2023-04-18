@@ -10,7 +10,7 @@ from langchain.prompts import BaseChatPromptTemplate
 from langchain.schema import AgentAction, AgentFinish, HumanMessage, BaseMessage
 from sqlmodel import Session
 
-from db import engine
+from db import engine, Reminder
 
 load_dotenv()  # take environment variables from .env.
 
@@ -106,7 +106,7 @@ def get_agent_executor(to: str) -> AgentExecutor:
         time = datetime.strptime(time_str, "%Y-%m-%d %H:%M")
         if to != NULL_USER:
             with Session(engine) as session:
-                session.add(db.Reminder(name=reminder_text, time=time, line_to=to))
+                session.add(Reminder(name=reminder_text, time=time, line_to=to))
                 session.commit()
 
         print(f"Reminder set for {time} with name {reminder_text}")

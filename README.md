@@ -1,7 +1,7 @@
 # RemindCat Backend
 
-## SSHトンネル
+## Cloudflare Tunnel
 
 ```bash
-ssh -R 9001:localhost:9001 -R 9002:localhost:9002 opc@hu2ty.net
+cloudflared tunnel --config C:\Users\kenty\.cloudflared\config.yaml run
 ```

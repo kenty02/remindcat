@@ -26,14 +26,10 @@ app = FastAPI()
 origins = [
     "https://remindcat-webui.vercel.app"
 ]
-if os.getenv("ENV") == "dev":
-    origins.append(f"http://localhost:{9002}")
-    origins.append(f"https://remindcat-web-dev.hu2ty.net")
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"^https://(.*)-kenty02.vercel.app$",
+    allow_origin_regex=r"^https://(.*).hu2ty.net$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -116,10 +112,6 @@ async def get_line_user(authorization: HTTPAuthorizationCredentials = Depends(HT
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception
-        # check expiration
-        expires: datetime = payload.get("exp")
-        if expires < datetime.utcnow():
-            raise credentials_exception
         token_data = LineUser(id=user_id, name=payload.get("name"))
     except JWTError:
         raise credentials_exception
@@ -130,11 +122,11 @@ async def get_line_user(authorization: HTTPAuthorizationCredentials = Depends(HT
 def read_reminders_me(
         *,
         session: Session = Depends(get_session),
-        line_user: str = Depends(get_line_user),
+        line_user: LineUser = Depends(get_line_user),
         offset: int = 0,
         limit: int = Query(default=100, lte=100),
 ):
-    reminders = session.exec(select(Reminder).where(Reminder.line_to == line_user).offset(offset).limit(limit)).all()
+    reminders = session.exec(select(Reminder).where(Reminder.line_to == line_user.id).offset(offset).limit(limit)).all()
     return reminders
 
 
