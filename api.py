@@ -130,6 +130,23 @@ def read_reminders_me(
     return reminders
 
 
+@app.delete("/reminders/me/")
+def read_reminders_me(
+        *,
+        session: Session = Depends(get_session),
+        line_user: LineUser = Depends(get_line_user),
+        id: int,
+):
+    reminder = session.get(Reminder, id)
+    if not reminder:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    if line_user.id != reminder.line_to:
+        raise HTTPException(status_code=403, detail="User not allowed to delete this reminder")
+    session.delete(reminder)
+    session.commit()
+    return
+
+
 @app.post("/heroes/", response_model=HeroRead)
 def create_hero(*, session: Session = Depends(get_session), hero: HeroCreate):
     db_hero = Hero.from_orm(hero)
