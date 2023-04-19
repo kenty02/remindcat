@@ -23,8 +23,8 @@ async def check_reminders():
                 continue
             # todo: 1分以上遅れた場合は謝罪を添える
             # push line message
-            to = reminder['to']
-            text = f"'{reminder['text']}'のお時間です"
+            to = reminder.line_to
+            text = f"'{reminder.name}'のお時間です"
             print(f"Pushing message to {to}: {text}")
             line_bot_api.push_message(to, TextSendMessage(text=text))
             # 送信できたのを確認したらDBから削除
